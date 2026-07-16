@@ -1,105 +1,17 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cong cu Review Du lieu Tai lieu</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<header class="app-header">
-  <div class="app-header__title">
-    <span class="app-header__eyebrow">Sổ đối chiếu tài liệu</span>
-    <h1>Review dữ liệu &amp; tài liệu gốc</h1>
-  </div>
-  <div class="app-header__stats" id="stats">
-    <div class="stat"><span class="stat__num" id="stat-total">0</span><span class="stat__label">tổng bản ghi</span></div>
-    <div class="stat"><span class="stat__num" id="stat-reviewed">0</span><span class="stat__label">đã duyệt</span></div>
-    <div class="stat"><span class="stat__num" id="stat-pending">0</span><span class="stat__label">chờ duyệt</span></div>
-  </div>
-</header>
-
-<main class="layout">
-
-  <section class="ledger" aria-label="Danh sách bản ghi">
-    <div class="ledger__toolbar">
-      <input type="search" id="search-input" placeholder="Tìm theo tên file, người gửi, người nhận..." autocomplete="off">
-    </div>
-    <div class="ledger__table-wrap">
-      <table class="ledger__table">
-        <thead>
-          <tr>
-            <th class="col-id">ID</th>
-            <th>Tên file</th>
-            <th>Người gửi</th>
-            <th>Người nhận</th>
-            <th>Thời gian</th>
-            <th class="col-status">Trạng thái</th>
-          </tr>
-        </thead>
-        <tbody id="ledger-body">
-          <!-- render bằng JS -->
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <section class="detail" aria-label="Chi tiết & đánh giá">
-
-    <div class="detail__empty" id="detail-empty">
-      <p>Chọn 1 bản ghi ở bảng bên trái để xem tài liệu và bắt đầu đánh giá.</p>
-    </div>
-
-    <div class="detail__content" id="detail-content" hidden>
-
-      <div class="detail__pdf-pane">
-        <div class="pane-label">Tài liệu PDF gốc</div>
-        <div class="pdf-frame-wrap">
-          <iframe id="pdf-frame" title="Xem trước PDF"></iframe>
-          <div class="pdf-frame-wrap__empty" id="pdf-empty" hidden>Không tìm thấy file PDF liên kết.</div>
-        </div>
-      </div>
-
-      <div class="detail__form-pane">
-        <div class="pane-label">Đối chiếu &amp; đánh giá</div>
-
-        <div class="readonly-fields" id="readonly-fields">
-          <!-- render bằng JS: id, file_name, link... -->
-        </div>
-
-        <form id="review-form">
-          <div class="review-fields" id="review-fields">
-            <!-- render bằng JS: các field cần đối chiếu -->
-          </div>
-
-          <div class="verdict-row">
-            <span class="verdict-row__label">Kết luận tổng thể:</span>
-            <label class="stamp-radio stamp-radio--ok">
-              <input type="radio" name="verdict" value="correct" required>
-              <span class="stamp">ĐÚNG</span>
-            </label>
-            <label class="stamp-radio stamp-radio--bad">
-              <input type="radio" name="verdict" value="incorrect" required>
-              <span class="stamp">SAI</span>
-            </label>
-          </div>
-
-          <label class="note-label" for="note-input">Ghi chú</label>
-          <textarea id="note-input" rows="3" placeholder="Ghi chú thêm về bản ghi này (không bắt buộc)..."></textarea>
-
-          <div class="form-actions">
-            <span class="form-actions__saved" id="saved-indicator" hidden>✓ Đã lưu đánh giá</span>
-            <button type="submit" class="btn-submit">Gửi đánh giá</button>
-          </div>
-        </form>
-      </div>
-
-    </div>
-  </section>
-
-</main>
-
-<script src="main.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sổ Đối Chiếu Tài Liệu &amp; Dữ Liệu Gốc</title>
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script type="module" crossorigin src="./assets/index-dq0XT-UK.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CdZNpM9M.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
 </html>
