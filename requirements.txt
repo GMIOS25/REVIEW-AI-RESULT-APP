@@ -1,0 +1,10 @@
+pywebview>=4.4
+pyinstaller>=6.0
+
+# Chỉ cần khi bật STORAGE_PROVIDER = "s3" trong app/config.py
+# boto3>=1.34
+
+# Chỉ cần nếu sau này đổi SOURCE_DB_TYPE sang Postgres/MySQL/SQL Server
+# psycopg2-binary>=2.9   # PostgreSQL
+# pymysql>=1.1           # MySQL/MariaDB
+# pyodbc>=5.0             # SQL Server
