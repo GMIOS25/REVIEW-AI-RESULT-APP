@@ -17,7 +17,9 @@ from app.storage.local_storage import get_storage_provider
 class Api:
     def __init__(self):
         self.source_db = get_source_db()
-        self.review_db = get_review_db()
+        # Truyền danh sách cột hiện tại của bảng metadata gốc để review_db
+        # tạo sẵn bảng metadata_after_modify với đúng cấu trúc (dynamic).
+        self.review_db = get_review_db(source_fields=self.source_db.list_fields())
         self.storage = get_storage_provider()
 
     # ------------------------------------------------------------------ #
@@ -88,14 +90,35 @@ class Api:
         """
         corrections: dict {field_name: gia_tri_da_sua} — chỉ cần chứa các field
         mà người dùng thực sự sửa, không cần gửi toàn bộ.
+
+        Mỗi lần gọi hàm này (tức là mỗi lần người dùng bấm "Gửi đánh giá"),
+        ghi vào 2 nơi trong review.db:
+          1. Bảng `reviews`  — lưu corrections dạng diff (như trước giờ),
+             dùng để hiển thị lại đúng phần đã sửa trên UI.
+          2. Bảng `metadata_after_modify` — lưu bản ghi ĐẦY ĐỦ, với các
+             field bị sửa đã được áp dụng giá trị mới, dùng làm dữ liệu
+             "gốc sau khi sửa" cho AI/ML. Nếu người dùng không sửa gì
+             (corrections rỗng) thì bản ghi ở đây vẫn được ghi/cập nhật,
+             chỉ là giống hệt bản gốc. Bản ghi CHƯA từng gửi đánh giá thì
+             KHÔNG xuất hiện trong bảng này (chỉ tồn tại bên source.db).
         """
         try:
+            source_record = self.source_db.get_record(record_id)
+            if source_record is None:
+                return {"ok": False, "error": f"Khong tim thay ban ghi id={record_id} ben source.db"}
+
             updated = self.review_db.upsert_review(
                 source_record_id=record_id,
                 is_correct_overall=is_correct_overall,
                 corrections=corrections,
                 note=note,
             )
+
+            # Ghép corrections vào bản ghi gốc để tạo ra bản ghi "sau khi sửa"
+            merged_record = dict(source_record)
+            merged_record.update(corrections or {})
+            self.review_db.upsert_metadata_after_modify(merged_record)
+
             return {"ok": True, "review": updated}
         except Exception as e:
             return {"ok": False, "error": str(e)}
