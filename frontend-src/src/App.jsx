@@ -1,16 +1,14 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   MagnifyingGlass,
   CheckCircle,
   XCircle,
   Clock,
   User,
-  Paperclip,
   Sun,
   Moon,
   FilePdf,
   Database,
-  Note,
   FloppyDisk,
   FolderOpen,
   ArrowCounterClockwise,
@@ -90,7 +88,6 @@ export default function App() {
   const [records, setRecords] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterTab, setFilterTab] = useState("all"); // 'all' | 'pending' | 'reviewed'
   
   // Chi tiết bản ghi đang chọn
   const [detail, setDetail] = useState(null);
@@ -143,14 +140,9 @@ export default function App() {
     }
   }, []);
 
-  // Lọc danh sách theo Tab và Ô Tìm kiếm
+  // Lọc danh sách theo Ô Tìm kiếm
   const filteredRecords = useMemo(() => {
     return records.filter((rec) => {
-      // 1. Lọc theo Tab trạng thái
-      if (filterTab === "pending" && rec.review_status !== "pending") return false;
-      if (filterTab === "reviewed" && rec.review_status !== "reviewed") return false;
-      
-      // 2. Lọc theo Tìm kiếm từ khóa
       if (!searchQuery.trim()) return true;
       const q = searchQuery.toLowerCase();
       return (
@@ -160,16 +152,12 @@ export default function App() {
         String(rec.id).includes(q)
       );
     });
-  }, [records, filterTab, searchQuery]);
+  }, [records, searchQuery]);
 
-  // Thống kê số liệu để hiển thị trên Header & Tab Badges
+  // Thống kê số liệu để hiển thị trên Header
   const stats = useMemo(() => {
-    const total = records.length;
-    const reviewed = records.filter((r) => r.review_status === "reviewed").length;
     return {
-      total,
-      reviewed,
-      pending: total - reviewed,
+      total: records.length,
     };
   }, [records]);
 
@@ -339,26 +327,6 @@ export default function App() {
                 <span className="stat-label">Tổng bản ghi</span>
               </div>
             </div>
-
-            <div className="stat-item" title="Số lượng bản ghi đã duyệt">
-              <span className="stat-icon reviewed">
-                <CheckCircle size={16} weight="bold" />
-              </span>
-              <div className="stat-info">
-                <span className="stat-count">{stats.reviewed}</span>
-                <span className="stat-label">Đã duyệt</span>
-              </div>
-            </div>
-
-            <div className="stat-item" title="Số lượng bản ghi chờ duyệt">
-              <span className="stat-icon pending">
-                <Clock size={16} weight="bold" />
-              </span>
-              <div className="stat-info">
-                <span className="stat-count">{stats.pending}</span>
-                <span className="stat-label">Chờ duyệt</span>
-              </div>
-            </div>
           </div>
 
           {/* Theme Toggle Button */}
@@ -389,30 +357,7 @@ export default function App() {
               />
             </div>
 
-            {/* Filter Tabs */}
-            <div className="filter-tabs">
-              <button
-                className={`tab-btn ${filterTab === "all" ? "active" : ""}`}
-                onClick={() => setFilterTab("all")}
-              >
-                <span>Tất cả</span>
-                <span className="tab-badge">{stats.total}</span>
-              </button>
-              <button
-                className={`tab-btn ${filterTab === "pending" ? "active" : ""}`}
-                onClick={() => setFilterTab("pending")}
-              >
-                <span>Chờ duyệt</span>
-                <span className="tab-badge">{stats.pending}</span>
-              </button>
-              <button
-                className={`tab-btn ${filterTab === "reviewed" ? "active" : ""}`}
-                onClick={() => setFilterTab("reviewed")}
-              >
-                <span>Đã duyệt</span>
-                <span className="tab-badge">{stats.reviewed}</span>
-              </button>
-            </div>
+
           </div>
 
           {/* List Component */}
@@ -430,13 +375,7 @@ export default function App() {
                       <span className="ledger-filename" title={rec.file_name}>
                         {rec.file_name}
                       </span>
-                      <span
-                        className={`status-badge ${
-                          rec.review_status === "reviewed" ? "reviewed" : "pending"
-                        }`}
-                      >
-                        {rec.review_status === "reviewed" ? "Đã duyệt" : "Chờ"}
-                      </span>
+
                     </div>
 
                     <div className="ledger-item-meta">
